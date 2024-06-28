@@ -1,0 +1,4 @@
+github.com:
+    oauth_token: <oauth_token>
+    user: nyastin
+    git_protocol: https

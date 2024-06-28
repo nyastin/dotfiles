@@ -1,0 +1,3 @@
+zsh/.config/gh/hosts.yml
+zsh/.config/gh/hosts.yml.*
+!zsh/.config/gh/hosts.yml.example

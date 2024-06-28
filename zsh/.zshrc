@@ -18,5 +18,6 @@ alias ls="eza --icons=always"
 
 # ---- Zoxide (better cd) ----
 eval "$(zoxide init zsh)"
+eval "$(fnm env --use-on-cd)"
 
 alias cd="z"

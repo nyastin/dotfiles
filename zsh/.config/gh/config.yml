@@ -1,0 +1,11 @@
+git_protocol: https
+editor:
+prompt: enabled
+pager:
+aliases:
+    co: pr checkout
+    personal: '!cp ~/.config/gh/hosts.yml.personal ~/.config/gh/hosts.yml && gh auth setup-git && git config --global user.name "nyastin" && git config --global user.email "jstnvlnca@gmail.com" && gh auth status'
+    work: '!cp ~/.config/gh/hosts.yml.work ~/.config/gh/hosts.yml && gh auth setup-git && git config --global user.name "justin-valencia-fgi" && git config --global user.email "justin.valencia@focusglobalinc.com" && gh auth status'
+http_unix_socket:
+browser:
+version: "1"
