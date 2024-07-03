@@ -21,3 +21,18 @@ eval "$(zoxide init zsh)"
 eval "$(fnm env --use-on-cd)"
 
 alias cd="z"
+
+restore () {
+if [[ "$1" == "omni" ]]
+then
+  tmux split-window -h -l 50 'docker compose up'
+  tmux split-window -v 'cd packages/db && pnpm run db:studio --browser none'
+  tmux last-pane
+  pnpm run dev "${@:2}"
+elif [[ "$1" == "ecm" ]]
+then
+  echo "TODO: ecm"
+else
+  echo "Invalid argument. Please provide 'omni' or 'ecm'."
+fi
+}
