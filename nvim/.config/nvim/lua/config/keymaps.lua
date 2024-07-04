@@ -20,3 +20,7 @@ opts.desc = "Live Grep"
 keymap("n", "<C-f>", builtin.live_grep, opts)
 opts.desc = "Find Files"
 keymap("n", "<C-p>", builtin.find_files, opts)
+opts.desc = "LSP Document Symbol"
+keymap("n", "<leader>ds", builtin.lsp_document_symbols, opts)
+
+-- TODO: HARPOON
