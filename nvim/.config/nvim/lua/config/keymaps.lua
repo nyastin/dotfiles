@@ -13,6 +13,10 @@ keymap("n", "<C-d>", "<C-d>zz", opts)
 opts.desc = "Scroll up"
 keymap("n", "<C-u>", "<C-u>zz", opts)
 
+-- Update opts for the next keymap
+opts.desc = "Trigger Suggestion"
+keymap("n", "<C-@>", "<C-space>", opts)
+
 -- Telescope
 local builtin = require("telescope.builtin")
 
