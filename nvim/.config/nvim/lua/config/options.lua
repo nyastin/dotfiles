@@ -5,3 +5,7 @@
 -- Enable word wrap by default
 local opt = vim.opt
 opt.wrap = true
+
+-- Implement transparent bg to autocomplete(popup) and windows(floats)
+vim.o.pumblend = 0
+vim.o.winblend = 0
