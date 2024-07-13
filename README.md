@@ -58,7 +58,15 @@
       git clone https://github.com/nyastin/dotfiles ~/.config
       ```
 
-6. **Use Stow to manage dotfiles**
+6. **Clone Tmux Plugin Manager (TPM)**
+
+   1. Run the following command in the terminal:
+      ```sh
+      git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+      ```
+
+7. **Use Stow to manage dotfiles**
+
    1. Navigate to the `.config` directory:
       ```sh
       cd ~/.config
@@ -69,6 +77,16 @@
       stow zsh
       stow alacritty
       stow starship
+      ```
+
+8. **Tmux plugins installation**
+
+   1. Run the `tmux` command:
+   2. Press `prefix + I` (capital i, as in Install) to fetch the plugins listed stored in .tmux.conf.
+      Plugin Inclusions:
+      ```sh
+      catppuccin/tmux
+      tmux-plugins/tmux-battery
       ```
 
 ### Additional Notes
