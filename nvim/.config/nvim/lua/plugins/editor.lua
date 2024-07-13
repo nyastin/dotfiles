@@ -176,6 +176,11 @@ return {
 
       vim.o.laststatus = vim.g.lualine_laststatus
 
+      local get_top_level_folder_name = function()
+        local cwd = vim.fn.getcwd()
+        return vim.fn.fnamemodify(cwd, ":t")
+      end
+
       local opts = {
         options = {
           theme = "auto", -- You can change this to your preferred theme
@@ -265,13 +270,13 @@ return {
             { "filetype", "progress" },
           },
           lualine_z = {
-            { "location", separator = { right = "" }, padding = { left = 2, right = 0 } },
+            { "location", separator = { right = "" }, padding = { left = 2, right = 1 } },
             {
               function()
                 return " " .. os.date("%I:%M")
               end,
               separator = { right = "" },
-              padding = { left = 2, right = 0 },
+              padding = { left = 1, right = 1 },
             },
           },
         },
@@ -283,7 +288,33 @@ return {
           lualine_y = {},
           lualine_z = { "location" },
         },
-        extensions = { "neo-tree", "lazy" },
+        -- extensions = { "neo-tree", "lazy" },
+        extensions = {
+          {
+            sections = {
+              lualine_a = {
+                { "mode", separator = { left = "" }, padding = { left = 0, right = 2 } },
+              },
+              lualine_b = { "branch" },
+              lualine_c = {
+                "%=", -- Placeholder for center components, modify as needed
+              },
+              lualine_x = {},
+              lualine_y = { "filetype" },
+              lualine_z = {
+                {
+                  function()
+                    return " " .. os.date("%I:%M")
+                  end,
+                  separator = { right = "" },
+                  padding = { left = 1, right = 1 },
+                },
+              },
+            },
+            filetypes = { "neo-tree" },
+          },
+          "lazy",
+        },
       }
 
       -- do not add trouble symbols if aerial is enabled
