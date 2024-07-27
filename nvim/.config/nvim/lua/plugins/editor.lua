@@ -52,10 +52,6 @@ return {
     -- change some options
     opts = {
       defaults = {
-        layout_strategy = "horizontal",
-        layout_config = { prompt_position = "bottom" },
-        sorting_strategy = "ascending",
-        winblend = 0,
         file_ignored_patterns = {
           "node_modules",
           ".git",
