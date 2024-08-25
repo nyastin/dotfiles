@@ -334,4 +334,22 @@ return {
       return opts
     end,
   },
+
+  {
+    "hrsh7th/nvim-cmp",
+    dependencies = { "hrsh7th/cmp-emoji" },
+    ---@param opts cmp.ConfigSchema
+    opts = function(_, opts)
+      local cmp = require("cmp")
+
+      -- Add the emoji source to the existing sources
+      table.insert(opts.sources, { name = "emoji" })
+
+      -- Add borders to the suggestion (completion) and documentation windows
+      opts.window = {
+        completion = cmp.config.window.bordered(), -- Adds border to the suggestion window
+        documentation = cmp.config.window.bordered(), -- Adds border to the documentation window
+      }
+    end,
+  },
 }

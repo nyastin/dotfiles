@@ -28,7 +28,7 @@ then
   tmux split-window -h -l 50 'docker compose up'
   tmux split-window -v 'cd packages/db && pnpm run db:studio --browser none'
   tmux last-pane
-  pnpm run dev "${@:2}"
+  pnpm run dev --filter @omni/internal "${@:2}"
 elif [[ "$1" == "ecm" ]]
 then
   echo "TODO: ecm"
