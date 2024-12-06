@@ -36,3 +36,108 @@ else
   echo "Invalid argument. Please provide 'omni' or 'ecm'."
 fi
 }
+
+# ---- Manual TMS ----
+# restore () {
+#   if [[ "$1" == "omni" ]]
+#   then
+#     tmux split-window -h -l 50 'docker compose up'
+#     tmux split-window -v 'cd packages/db && pnpm run db:studio --browser none'
+#     tmux last-pane
+#     pnpm run dev --filter @omni/internal "${@:2}"
+#   elif [[ "$1" == "webservice" ]]
+#   then
+#     # Check if the 'webservice-be', 'webservice-fe', and 'webservice-docker-backend' windows already exist
+#     if tmux list-windows | grep -q 'webservice-be' || \
+#        tmux list-windows | grep -q 'webservice-fe' || \
+#        tmux list-windows | grep -q 'webservice-docker-backend'; then
+#
+#       # If windows exist, run the commands directly in the existing 'webservice-docker-backend' window
+#       tmux select-window -t 'webservice-docker-backend' \; \
+#         split-window -h -l 50 'docker compose up' \; \
+#         split-window -v 'cd ../fgi-web-service && pnpm run https' \; \
+#         select-pane -t 1 \; \
+#         send-keys './flask-https.sh' C-m
+#
+#     else
+#       # First window: Open nvim in current directory and name it 'webservice-be'
+#       tmux rename-window -t 1 'webservice-be'
+#       tmux send-keys 'nvim' C-m
+#
+#       # Second window: Switch directory, open nvim, and name it 'webservice-fe'
+#       tmux new-window -n 'webservice-fe' 'cd ../fgi-web-service && nvim'
+#
+#       # Third window: Split and run the necessary commands, name it 'webservice-docker-backend'
+#       tmux new-window -n 'webservice-docker-backend' \; \
+#         split-window -h -l 50 'docker compose up' \; \
+#         split-window -v 'cd ../fgi-web-service && pnpm run https' \; \
+#         select-pane -t 1 \; \
+#         send-keys './flask-https.sh' C-m
+#     fi
+#   else
+#     echo "Invalid argument. Please provide 'omni' or 'webservice'."
+#   fi
+# }
+#
+# tms() {
+#   # Define the base directories
+#   local base_dirs=(~/Documents/Dev) #  ~/dotfiles
+#
+#   # Create an associative array to map base names to full paths
+#   local -A repo_map
+#
+#   # Populate the repo_map with base names as keys and full paths as values
+#   for dir in "${base_dirs[@]}"; do
+#     for repo in "$dir"/*; do
+#       if [[ -d $repo ]]; then
+#         repo_map[$(basename "$repo")]="$repo"
+#       fi
+#     done
+#   done
+#
+#   # Ensure fzf is installed
+#   if ! command -v fzf > /dev/null; then
+#     echo "fzf is not installed. Please install fzf to use this function."
+#     return 1
+#   fi
+#
+#   # If an argument is passed, use it as the selected repo
+#   local selected_name
+#   if [[ $# -eq 1 ]]; then
+#     selected_name=$1
+#   else
+#     # Use fzf to select the repo base name
+#     selected_name=$(echo ${(k)repo_map} | tr ' ' '\n' | fzf)
+#   fi
+#
+#   # Exit if no selection is made
+#   if [[ -z $selected_name ]]; then
+#     return 0
+#   fi
+#
+#   # Get the full path from the repo_map
+#   local selected=${repo_map[$selected_name]}
+#
+#   # Replace dots with underscores for session name
+#   local session_name=$(echo $selected_name | tr . _)
+#   local tmux_running=$(pgrep tmux)
+#
+#   # Start a new session if no tmux server is running
+#   if [[ -z $TMUX ]] && [[ -z $tmux_running ]]; then
+#     tmux new-session -s $session_name -c "$selected" && return 0
+#   fi
+#
+#   # Check if the session already exists
+#   if tmux has-session -t $session_name 2> /dev/null; then
+#     # Switch to the existing session
+#     if [[ -n $TMUX ]]; then
+#       tmux switch-client -t $session_name
+#     else
+#       tmux attach-session -t $session_name
+#     fi
+#   else
+#     # Create a new session if it doesn't exist
+#     tmux new-session -ds $session_name -c "$selected" && tmux switch-client -t $session_name
+#   fi
+# }
+# export PATH="/opt/homebrew/opt/postgresql@16/bin:$PATH"
