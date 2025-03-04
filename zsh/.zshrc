@@ -1,3 +1,7 @@
+if [[ -f "$HOME/.private.sh" ]]; then
+  source "$HOME/.private.sh"
+fi
+
 export PATH=$PATH:$HOME/.local/share/bob/nvim-bin
 
 eval "$(/opt/homebrew/bin/brew shellenv)"
@@ -15,6 +19,8 @@ source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 # ---- Eza (better ls) -----
 
 alias ls="eza --icons=always"
+alias python=python3
+alias pip=pip3
 
 # ---- Zoxide (better cd) ----
 eval "$(zoxide init zsh)"
@@ -22,63 +28,62 @@ eval "$(fnm env --use-on-cd)"
 
 alias cd="z"
 
+# restore () {
+# if [[ "$1" == "omni" ]]
+# then
+#   tmux split-window -h -l 50 'docker compose up'
+#   tmux split-window -v 'cd packages/db && pnpm run db:studio --browser none'
+#   tmux last-pane
+#   pnpm run dev --filter @omni/internal "${@:2}"
+# elif [[ "$1" == "ecm" ]]
+# then
+#   echo "TODO: ecm"
+# else
+#   echo "Invalid argument. Please provide 'omni' or 'ecm'."
+# fi
+# }
+
 restore () {
-if [[ "$1" == "omni" ]]
-then
-  tmux split-window -h -l 50 'docker compose up'
-  tmux split-window -v 'cd packages/db && pnpm run db:studio --browser none'
-  tmux last-pane
-  pnpm run dev --filter @omni/internal "${@:2}"
-elif [[ "$1" == "ecm" ]]
-then
-  echo "TODO: ecm"
-else
-  echo "Invalid argument. Please provide 'omni' or 'ecm'."
-fi
+  if [[ "$1" == "omni" ]]
+  then
+    tmux split-window -h -l 50 'docker compose up'
+    tmux split-window -v 'cd packages/db && pnpm run db:studio --browser none'
+    tmux last-pane
+    pnpm run dev --filter @omni/internal "${@:2}"
+  elif [[ "$1" == "webservice" ]]
+  then
+    # Check if the 'webservice-be', 'webservice-fe', and 'webservice-docker-backend' windows already exist
+    if tmux list-windows | grep -q 'webservice-be' || \
+       tmux list-windows | grep -q 'webservice-fe' || \
+       tmux list-windows | grep -q 'webservice-docker-backend'; then
+
+      # If windows exist, run the commands directly in the existing 'webservice-docker-backend' window
+      tmux select-window -t 'webservice-docker-backend' \; \
+        split-window -h -l 50 'docker compose up' \; \
+        split-window -v 'cd ../fgi-web-service && pnpm run https' \; \
+        select-pane -t 1 \; \
+        send-keys './flask-https.sh' C-m
+
+    else
+      # First window: Open nvim in current directory and name it 'webservice-be'
+      tmux rename-window -t 1 'webservice-be'
+      tmux send-keys 'nvim' C-m
+
+      # Second window: Switch directory, open nvim, and name it 'webservice-fe'
+      tmux new-window -n 'webservice-fe' 'cd ../fgi-web-service && nvim'
+
+      # Third window: Split and run the necessary commands, name it 'webservice-docker-backend'
+      tmux new-window -n 'webservice-docker-backend' \; \
+        split-window -h -l 50 'docker compose up' \; \
+        split-window -v 'cd ../fgi-web-service && pnpm run https' \; \
+        select-pane -t 1 \; \
+        send-keys './flask-https.sh' C-m
+    fi
+  else
+    echo "Invalid argument. Please provide 'omni' or 'webservice'."
+  fi
 }
 
-# ---- Manual TMS ----
-# restore () {
-#   if [[ "$1" == "omni" ]]
-#   then
-#     tmux split-window -h -l 50 'docker compose up'
-#     tmux split-window -v 'cd packages/db && pnpm run db:studio --browser none'
-#     tmux last-pane
-#     pnpm run dev --filter @omni/internal "${@:2}"
-#   elif [[ "$1" == "webservice" ]]
-#   then
-#     # Check if the 'webservice-be', 'webservice-fe', and 'webservice-docker-backend' windows already exist
-#     if tmux list-windows | grep -q 'webservice-be' || \
-#        tmux list-windows | grep -q 'webservice-fe' || \
-#        tmux list-windows | grep -q 'webservice-docker-backend'; then
-#
-#       # If windows exist, run the commands directly in the existing 'webservice-docker-backend' window
-#       tmux select-window -t 'webservice-docker-backend' \; \
-#         split-window -h -l 50 'docker compose up' \; \
-#         split-window -v 'cd ../fgi-web-service && pnpm run https' \; \
-#         select-pane -t 1 \; \
-#         send-keys './flask-https.sh' C-m
-#
-#     else
-#       # First window: Open nvim in current directory and name it 'webservice-be'
-#       tmux rename-window -t 1 'webservice-be'
-#       tmux send-keys 'nvim' C-m
-#
-#       # Second window: Switch directory, open nvim, and name it 'webservice-fe'
-#       tmux new-window -n 'webservice-fe' 'cd ../fgi-web-service && nvim'
-#
-#       # Third window: Split and run the necessary commands, name it 'webservice-docker-backend'
-#       tmux new-window -n 'webservice-docker-backend' \; \
-#         split-window -h -l 50 'docker compose up' \; \
-#         split-window -v 'cd ../fgi-web-service && pnpm run https' \; \
-#         select-pane -t 1 \; \
-#         send-keys './flask-https.sh' C-m
-#     fi
-#   else
-#     echo "Invalid argument. Please provide 'omni' or 'webservice'."
-#   fi
-# }
-#
 # tms() {
 #   # Define the base directories
 #   local base_dirs=(~/Documents/Dev) #  ~/dotfiles
@@ -141,3 +146,19 @@ fi
 #   fi
 # }
 # export PATH="/opt/homebrew/opt/postgresql@16/bin:$PATH"
+
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+# __conda_setup="$('/opt/homebrew/Caskroom/miniconda/base/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+# if [ $? -eq 0 ]; then
+#     eval "$__conda_setup"
+# else
+#     if [ -f "/opt/homebrew/Caskroom/miniconda/base/etc/profile.d/conda.sh" ]; then
+#         . "/opt/homebrew/Caskroom/miniconda/base/etc/profile.d/conda.sh"
+#     else
+#         export PATH="/opt/homebrew/Caskroom/miniconda/base/bin:$PATH"
+#     fi
+# fi
+# unset __conda_setup
+# <<< conda initialize <<<
+

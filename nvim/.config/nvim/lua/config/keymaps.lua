@@ -18,11 +18,11 @@ opts.desc = "Trigger Suggestion"
 keymap("n", "<C-@>", "<C-space>", opts)
 
 -- Telescope
-local builtin = require("telescope.builtin")
+local builtin = require("snacks.picker")
 
 opts.desc = "Live Grep"
-keymap("n", "<C-f>", builtin.live_grep, opts)
+keymap("n", "<C-f>", builtin.grep, opts)
 opts.desc = "Find Files"
-keymap("n", "<C-p>", builtin.find_files, opts)
+keymap("n", "<C-p>", builtin.files, opts)
 opts.desc = "LSP Document Symbol"
-keymap("n", "<leader>ds", builtin.lsp_document_symbols, opts)
+keymap("n", "<leader>ds", builtin.lsp_symbols, opts)

@@ -37,69 +37,42 @@ return {
     },
   },
 
-  -- Telescope Configuration
   {
-    "nvim-telescope/telescope.nvim",
-    keys = {
-      {
-        "<leader>fp",
-        function()
-          require("telescope.builtin").find_files({ cwd = require("lazy.core.config").options.root })
-        end,
-        desc = "Find Plugin File",
-      },
-      {
-        "<leader><space>",
-        function()
-          require("telescope.builtin").find_files({
-            cwd = vim.fn.getcwd(),
-          })
-        end,
-        desc = "Find Files (cwd)",
-      },
-      --@TODO: include .env files while respecting gitignore
-      {
-        "<leader>fe",
-        function()
-          require("telescope.builtin").find_files({
-            cwd = vim.fn.getcwd(),
-            hidden = true,
-            find_command = {
-              "rg",
-              "--files",
-              "--hidden",
-              "--no-ignore-vcs",
-              "--glob",
-              ".env*",
-            },
-          })
-        end,
-        desc = "Find .env Files",
-      },
-    },
+    "folke/snacks.nvim",
     opts = {
-      defaults = {
-        file_ignored_patterns = {
-          "node_modules",
-          ".git",
-          ".next",
-          ".turbo",
-          ".vercel",
-          ".expo",
-          ".open-next",
-          ".sst",
-          ".pio",
-          "dist",
-          "build",
-          "out",
-          "yarn.lock",
-          "package-lock.json",
-          "pnpm-lock.yaml",
-          "npm-debug.log",
-          "yarn-debug.log",
-          "yarn-error.log",
-          ".pnpm-debug.log",
-          ".tsbuildinfo",
+      scroll = {
+        enabled = false,
+      },
+      picker = {
+        sources = {
+          files = {
+            -- Include hidden files and specify glob patterns to include .env files
+            hidden = true,
+            ignored = true,
+            glob = { "*.env", ".env.*" }, -- Include .env files and variants like .env.example
+            exclude = { -- Exclude specific patterns
+              "**/node_modules/*",
+              "**/.next/*",
+              "**/.turbo/*",
+              ".vercel/",
+              ".expo/",
+              ".open-next/",
+              "**/.sst/*",
+              ".pio/",
+              "dist/",
+              "build/",
+              "out/",
+              "yarn.lock",
+              "package-lock.json",
+              "pnpm-lock.yaml",
+              "npm-debug.log",
+              "yarn-debug.log",
+              "yarn-error.log",
+              ".pnpm-debug.log",
+              ".tsbuildinfo",
+              -- Add other patterns as needed
+            },
+          },
         },
       },
     },
@@ -154,8 +127,8 @@ return {
           end,
           offsets = {
             {
-              filetype = "neo-tree",
-              text = "Neo-tree",
+              filetype = "snacks_picker_list",
+              text = "File Explorer",
               highlight = "Directory",
               text_align = "left",
             },
@@ -238,7 +211,7 @@ return {
                 return package.loaded["noice"] and require("noice").api.status.command.has()
               end,
               color = function()
-                return LazyVim.ui.fg("Statement")
+                return { fg = Snacks.util.color("Statement") }
               end,
             },
             {
@@ -249,7 +222,7 @@ return {
                 return package.loaded["noice"] and require("noice").api.status.mode.has()
               end,
               color = function()
-                return LazyVim.ui.fg("Constant")
+                return { fg = Snacks.util.color("Constant") }
               end,
             },
             {
@@ -260,14 +233,14 @@ return {
                 return package.loaded["dap"] and require("dap").status() ~= ""
               end,
               color = function()
-                return LazyVim.ui.fg("Debug")
+                return { fg = Snacks.util.color("Debug") }
               end,
             },
             {
               require("lazy.status").updates,
               cond = require("lazy.status").has_updates,
               color = function()
-                return LazyVim.ui.fg("Special")
+                return { fg = Snacks.util.color("Special") }
               end,
             },
             {
@@ -334,7 +307,7 @@ return {
                 },
               },
             },
-            filetypes = { "neo-tree" },
+            filetypes = { "snacks_picker_list" },
           },
           "lazy",
         },
@@ -365,7 +338,6 @@ return {
   {
     "hrsh7th/nvim-cmp",
     dependencies = { "hrsh7th/cmp-emoji" },
-    ---@param opts cmp.ConfigSchema
     opts = function(_, opts)
       local cmp = require("cmp")
 
