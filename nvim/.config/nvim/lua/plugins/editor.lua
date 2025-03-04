@@ -336,19 +336,21 @@ return {
   },
 
   {
-    "hrsh7th/nvim-cmp",
-    dependencies = { "hrsh7th/cmp-emoji" },
+    "saghen/blink.cmp",
     opts = function(_, opts)
-      local cmp = require("cmp")
+      -- Configure the completion menu with a border
+      opts.completion = opts.completion or {}
+      opts.completion.menu = opts.completion.menu or {}
+      opts.completion.menu.border = "rounded" -- Adds a rounded border to the completion menu
+      opts.completion.menu.winhighlight =
+        "Normal:Normal,FloatBorder:FloatBorder,CursorLine:BlinkCmpMenuSelection,Search:None"
 
-      -- Add the emoji source to the existing sources
-      table.insert(opts.sources, { name = "emoji" })
-
-      -- Add borders to the suggestion (completion) and documentation windows
-      opts.window = {
-        completion = cmp.config.window.bordered(), -- Adds border to the suggestion window
-        documentation = cmp.config.window.bordered(), -- Adds border to the documentation window
-      }
+      -- Configure the documentation window with a border
+      opts.completion.documentation = opts.completion.documentation or {}
+      opts.completion.documentation.window = opts.completion.documentation.window or {}
+      opts.completion.documentation.window.border = "rounded" -- Adds a rounded border to the documentation window
+      opts.completion.documentation.window.winhighlight =
+        "Normal:Normal,FloatBorder:FloatBorder,CursorLine:BlinkCmpDocCursorLine,Search:None"
     end,
   },
 

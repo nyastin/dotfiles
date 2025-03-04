@@ -25,6 +25,7 @@
     12. `tree`
     13. `lazygit`
     14. `fd`
+    15. `git-delta`
 
     Run the following command in the terminal:
 
