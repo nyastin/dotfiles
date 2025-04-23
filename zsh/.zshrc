@@ -54,14 +54,14 @@ restore () {
 
     if [[ "$current_dir" == "fgi-web-service-backend" ]]; then
       tmux split-window -h -l 50 'docker compose up'
-      tmux split-window -v 'cd ../fgi-web-service && pnpm run https'
+      tmux split-window -v 'cd ../fgi-web-service && npm run dev'
       tmux select-pane -t 1
-      tmux send-keys './flask-https.sh' C-m
+      tmux send-keys 'pipenv run flask run' C-m
     elif [[ "$current_dir" == "webservice" ]]; then
       tmux split-window -h -l 50 'cd fgi-web-service-backend && docker compose up'
-      tmux split-window -v 'cd fgi-web-service && pnpm run https'
+      tmux split-window -v 'cd fgi-web-service && npm run dev'
       tmux select-pane -t 1
-      tmux send-keys 'cd fgi-web-service-backend && ./flask-https.sh' C-m
+      tmux send-keys 'cd fgi-web-service-backend && pipenv run flask run' C-m
     else
       echo "Not in a valid webservice directory. Must be 'webservice' or 'fgi-web-service-backend'."
     fi
