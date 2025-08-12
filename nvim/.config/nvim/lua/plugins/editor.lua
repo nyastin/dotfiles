@@ -360,6 +360,14 @@ return {
     opts = {
       formatters_by_ft = {
         ["python"] = { "black", "isort" },
+        ["typescript"] = { "prettier", "eslint_d", "biome" },
+        ["javascript"] = { "prettier", "eslint_d", "biome" },
+        ["css"] = { "prettier", "biome" },
+        ["html"] = { "prettier", "biome" },
+        ["json"] = { "prettier", "biome" },
+        ["yaml"] = { "prettier" },
+        ["javascriptreact"] = { "prettier", "eslint_d", "biome" },
+        ["typescriptreact"] = { "prettier", "eslint_d", "biome" },
       },
       formatters = {
         black = {
