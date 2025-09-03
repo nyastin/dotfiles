@@ -20,7 +20,26 @@ return {
     },
   },
 
-  { "rose-pine/neovim", name = "rose-pine" },
+  {
+    "rose-pine/neovim",
+    name = "rose-pine",
+    config = function()
+      local palette = require("rose-pine.palette")
+      require("rose-pine").setup({
+        variant = "moon",
+        styles = {
+          transparency = true,
+          italics = true,
+        },
+        highlight_groups = {
+          CursorLineNr = {
+            fg = palette.foam,
+          },
+        },
+      })
+      vim.cmd([[colorscheme rose-pine-moon]])
+    end,
+  },
 
   {
     "catppuccin/nvim",
@@ -33,7 +52,7 @@ return {
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "catppuccin-macchiato",
+      colorscheme = "rose-pine",
     },
   },
 
@@ -99,17 +118,17 @@ return {
       -- Integration of Catppuccin to bufferline
       local mocha = require("catppuccin.palettes").get_palette("mocha")
       require("bufferline").setup({
-        highlights = require("catppuccin.groups.integrations.bufferline").get({
-          styles = { "italic", "bold" },
-          custom = {
-            mocha = {
-              background = { fg = mocha.text },
-            },
-            latte = {
-              background = { fg = "#000000" },
-            },
-          },
-        }),
+        -- highlights = require("catppuccin.groups.integrations.bufferline").get({
+        --   styles = { "italic", "bold" },
+        --   custom = {
+        --     mocha = {
+        --       background = { fg = mocha.text },
+        --     },
+        --     latte = {
+        --       background = { fg = "#000000" },
+        --     },
+        --   },
+        -- }),
         options = {
           close_command = function(n)
             LazyVim.ui.bufremove(n)
