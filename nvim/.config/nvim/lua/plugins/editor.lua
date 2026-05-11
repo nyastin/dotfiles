@@ -62,6 +62,9 @@ return {
       scroll = {
         enabled = false,
       },
+      input = {
+        enabled = false,
+      },
       picker = {
         sources = {
           files = {
@@ -375,49 +378,29 @@ return {
 
   {
     "stevearc/conform.nvim",
-    opts = function(_, opts)
-      local util = require("conform.util")
-
-      -- Detect local or global Biome
-      local function is_biome_present()
-        return util.from_node_modules("biome") or vim.fn.executable("biome") == 1
-      end
-
-      -- Conditional filetype mapping
-      local biome_first = is_biome_present()
-
-      opts.formatters_by_ft = {
-        python = { "black", "isort" },
-
-        -- JS/TS-based
-        typescript = biome_first and { "biome" } or { "eslint_d", "prettier" },
-        javascript = biome_first and { "biome" } or { "eslint_d", "prettier" },
-        typescriptreact = biome_first and { "biome" } or { "eslint_d", "prettier" },
-        javascriptreact = biome_first and { "biome" } or { "eslint_d", "prettier" },
-
-        -- Others
-        json = biome_first and { "biome" } or { "prettier" },
-        html = biome_first and { "biome" } or { "prettier" },
-        css = biome_first and { "biome" } or { "prettier" },
-        yaml = { "prettier" },
-      }
-
-      opts.formatters = vim.tbl_extend("force", opts.formatters or {}, {
+    optional = true,
+    opts = {
+      formatters_by_ft = {
+        ["python"] = { "black", "isort" },
+        ["typescript"] = { "biome", "prettier", "eslint_d", stop_after_first = false },
+        ["javascript"] = { "biome", "prettier", "eslint_d", stop_after_first = false },
+        ["typescriptreact"] = { "biome", "prettier", "eslint_d", stop_after_first = false },
+        ["javascriptreact"] = { "biome", "prettier", "eslint_d", stop_after_first = false },
+        ["css"] = { "biome", "prettier", stop_after_first = false },
+        ["html"] = { "prettier" },
+        ["json"] = { "biome", "prettier", stop_after_first = false },
+        ["jsonc"] = { "biome", "prettier", stop_after_first = false },
+        ["yaml"] = { "prettier" },
+      },
+      formatters = {
         black = {
           prepend_args = { "--line-length", "79", "--skip-string-normalization" },
         },
         biome = {
-          command = util.from_node_modules("biome"),
-          stdin = true,
+          command = "biome",
           args = { "check", "--write", "--stdin-file-path", "$FILENAME" },
-          condition = function(ctx)
-            -- Run only if Biome exists AND project has a config
-            --  TODO: proper condition
-            return is_biome_present()
-              and vim.fs.find({ ".biome.json", "biome.json" }, { upward = true, path = ctx.filename })[1] ~= nil
-          end,
         },
-      })
-    end,
+      },
+    },
   },
 }

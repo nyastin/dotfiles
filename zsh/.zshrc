@@ -49,6 +49,11 @@ restore () {
     tmux split-window -v 'cd packages/db && pnpm run db:studio --browser none'
     tmux last-pane
     pnpm run dev --filter @omni/internal "${@:2}"
+  elif [[ "$1" == "hris" ]]; then
+    tmux split-window -h -l 50 'docker compose up'
+    tmux split-window -v 'pnpm db:studio -- --browser none'
+    tmux last-pane
+    pnpm run dev "${@:2}"
   elif [[ "$1" == "webservice" ]]; then
     current_dir=$(basename "$PWD")
 
@@ -157,3 +162,4 @@ case ":$PATH:" in
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 # pnpm end
+export PATH="/opt/homebrew/opt/postgresql@15/bin:$PATH"
