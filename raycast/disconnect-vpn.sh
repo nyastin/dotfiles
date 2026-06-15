@@ -10,38 +10,16 @@
 # @raycast.packageName VPN Connection
 
 # Documentation:
-# @raycast.description Disconnects from TunnelBlick VPN and quits the application
+# @raycast.description Disconnects the FGI VPN
 # @raycast.author Justin Valencia
 # @raycast.authorURL https://github.com/nyastin
 
-# Capture the output of the AppleScript
-result=$(
-  osascript <<EOD
-tell application "Tunnelblick"
-  if it is running then
-    set connections to get name of configurations where state = "CONNECTED"
-    if connections is not {} then
-      disconnect all
-      delay 2 -- Wait for 2 seconds to ensure disconnection completes
-      quit
-      return "VPN disconnected and Tunnelblick quit successfully"
-    else
-      quit
-      return "No active VPN connections found. Tunnelblick quit."
-    end if
-  else
-    return "Tunnelblick is not running"
-  end if
-end tell
-EOD
-)
+PIDFILE="/tmp/openvpn-fgi.pid"
 
-# Echo the result
-echo "$result"
-
-# Set exit status based on the result
-if [[ "$result" == "VPN disconnected and Tunnelblick quit successfully" || "$result" == "No active VPN connections found. Tunnelblick quit." ]]; then
+if [ ! -f "$PIDFILE" ]; then
+  echo "VPN not running"
   exit 0
-else
-  exit 1
 fi
+
+sudo kill "$(cat "$PIDFILE")" && rm -f "$PIDFILE"
+echo "VPN disconnected"

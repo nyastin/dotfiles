@@ -10,16 +10,30 @@
 # @raycast.packageName VPN Connection
 
 # Documentation:
-# @raycast.description Launches TunnelBlick and connects to vpnconfig
+# @raycast.description Connects to FGI VPN via OpenVPN CLI
 # @raycast.author Justin Valencia
 # @raycast.authorURL https://github.com/nyastin
 
-osascript <<EOD
-tell application "Tunnelblick"
-  launch
-  connect "vpnconfig"
-end tell
-EOD
+CONFIG="$HOME/.openvpn/FGI.ovpn"
+PIDFILE="/tmp/openvpn-fgi.pid"
+LOGFILE="/tmp/openvpn-fgi.log"
+OPENVPN="$(command -v openvpn || echo /opt/homebrew/sbin/openvpn)"
+
+if [ -f "$PIDFILE" ] && kill -0 "$(cat "$PIDFILE")" 2>/dev/null; then
+  echo "VPN already connected (pid $(cat "$PIDFILE"))"
+  exit 0
+fi
+
+if [ ! -f "$CONFIG" ]; then
+  echo "Config not found: $CONFIG"
+  exit 1
+fi
+
+sudo "$OPENVPN" \
+  --config "$CONFIG" \
+  --daemon \
+  --writepid "$PIDFILE" \
+  --log "$LOGFILE"
 
 if [ $? -eq 0 ]; then
   echo "VPN connection initiated successfully"

@@ -23,7 +23,6 @@ alias python=python3
 alias pip=pip3
 
 # ---- Zoxide (better cd) ----
-eval "$(zoxide init zsh)"
 eval "$(fnm env --use-on-cd)"
 
 alias cd="z"
@@ -163,3 +162,6 @@ case ":$PATH:" in
 esac
 # pnpm end
 export PATH="/opt/homebrew/opt/postgresql@15/bin:$PATH"
+
+# zoxide must be initialized last so its shell hooks aren't clobbered by later PATH/precmd changes
+eval "$(zoxide init zsh)"
