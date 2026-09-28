@@ -48,6 +48,11 @@ restore () {
     tmux split-window -v 'cd packages/db && pnpm run db:studio --browser none'
     tmux last-pane
     pnpm run dev --filter @omni/internal "${@:2}"
+  elif [[ "$1" == "cs" ]]; then
+    tmux split-window -h -l 50 'cd packages/db && docker compose up'
+    tmux split-window -v 'pnpm db:studio -- --browser none'
+    tmux last-pane
+    pnpm dev "${@:2}"
   elif [[ "$1" == "hris" ]]; then
     tmux split-window -h -l 50 'docker compose up'
     tmux split-window -v 'pnpm db:studio -- --browser none'
@@ -70,7 +75,7 @@ restore () {
       echo "Not in a valid webservice directory. Must be 'webservice' or 'fgi-web-service-backend'."
     fi
   else
-    echo "Invalid argument. Please provide 'omni' or 'webservice'."
+    echo "Invalid argument. Please provide 'omni', 'cs', 'hris' or 'webservice'."
   fi
 }
 
@@ -165,3 +170,7 @@ export PATH="/opt/homebrew/opt/postgresql@15/bin:$PATH"
 
 # zoxide must be initialized last so its shell hooks aren't clobbered by later PATH/precmd changes
 eval "$(zoxide init zsh)"
+
+# Created by `pipx` on 2026-06-17 04:45:49
+export PATH="$PATH:/Users/justin.valencia/.local/bin"
+export PATH="/opt/homebrew/opt/postgresql@16/bin:$PATH"
